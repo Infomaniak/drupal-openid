@@ -1,7 +1,7 @@
 name: 'Infomaniak OpenId Connect'
 type: module
 description: 'Infomaniak OpenId Connect client'
-package: Nova
+package: Infomaniak
 core_version_requirement: ^10 || ^11
 dependencies:
   - openid_connect:openid_connect

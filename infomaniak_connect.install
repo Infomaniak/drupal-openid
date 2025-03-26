@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Install module hooks for Nova OIDC module.
+ * Install module hooks for Infomaniak OIDC module.
  */
 
 /* @noinspection PhpUnnecessaryFullyQualifiedNameInspection */

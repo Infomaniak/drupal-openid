@@ -1,4 +1,4 @@
-# Schema for the configuration of the Nova OpenID Connect plugin.
+# Schema for the configuration of the Infomaniak OpenID Connect plugin.
 openid_connect.client.plugin.infomaniak:
   type: mapping
   label: 'OpenID Connect Infomaniak settings'
