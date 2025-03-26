@@ -1,0 +1,33 @@
+.openid-connect-login-form {
+  margin: 20px 20px;
+  text-align: center;
+
+  .button.button--infomaniak {
+    display: inline-block;
+    padding: 8px 18px 8px 45px;
+    background-color: #0098ff;
+    font-family: Roboto, sans-serif;
+    font-size: 1em;
+    line-height: 1.6em;
+    color: #fff;
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    border-radius: 10px;
+    border-color: #0098ff;
+    text-decoration: none;
+    background-image: url(../icon/infomaniak.svg);
+    background-repeat: no-repeat;
+    background-size: 24px 24px;
+    background-position: 15px 50%;
+  }
+
+  .button.button--infomaniak:focus,
+  .button.button--infomaniak:active,
+  .button.button--infomaniak:hover {
+    background-color: #0089e6;
+    color: #fff;
+    text-decoration: none;
+  }
+
+}

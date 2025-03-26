@@ -1,0 +1,8 @@
+name: 'Infomaniak OpenId Connect'
+type: module
+description: 'Infomaniak OpenId Connect client'
+package: Nova
+core_version_requirement: ^10 || ^11
+dependencies:
+  - openid_connect:openid_connect
+configure: entity.openid_connect_client.list

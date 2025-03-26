@@ -1,0 +1,21 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - infomaniak_connect
+id: infomaniak
+label: Infomaniak
+plugin: infomaniak
+settings:
+  client_id: ''
+  client_secret: ''
+  iss_allowed_domains: login.infomaniak.com
+  issuer_url: 'https://login.infomaniak.com'
+  authorization_endpoint: 'https://login.infomaniak.com/authorize'
+  token_endpoint: 'https://login.infomaniak.com/token'
+  userinfo_endpoint: 'https://login.infomaniak.com/oauth2/userinfo'
+  scopes:
+    - openid email
+  end_session_endpoint: ''
+  emails_filter: ''
+  admin_emails: ''

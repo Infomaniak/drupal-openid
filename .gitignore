@@ -1,0 +1,7 @@
+# Remove phpstorm .idea files
+.idea
+
+# Ignore OS settings files
+.DS_Store*
+Thumbs.db
+ehthumbs.db

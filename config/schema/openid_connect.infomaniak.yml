@@ -1,0 +1,43 @@
+# Schema for the configuration of the Nova OpenID Connect plugin.
+openid_connect.client.plugin.infomaniak:
+  type: mapping
+  label: 'OpenID Connect Infomaniak settings'
+  mapping: &base
+    client_id:
+      type: string
+      label: 'Client ID'
+    client_secret:
+      type: string
+      label: 'Client secret'
+    iss_allowed_domains:
+      type: string
+      label: 'Domains that are allowed to initiate SSO using ISS'
+    issuer_url:
+      type: string
+      label: 'Issuer URL'
+    authorization_endpoint:
+      type: string
+      label: 'Authorization endpoint'
+    token_endpoint:
+      type: string
+      label: 'Token endpoint'
+    userinfo_endpoint:
+      type: string
+      label: 'Userinfo endpoint'
+    scopes:
+      type: sequence
+      label: 'Scopes'
+      sequence:
+        type: string
+    emails_filter_type:
+      type: string
+      label: 'Filter type'
+    emails_filter:
+      type: string
+      label: 'Domains that are allowed to login SSO using IDP'
+    admin_emails:
+      type: string
+      label: 'Admin emails'
+    userinfo_update_email:
+      type: boolean
+      label: 'Update email address in user profile'

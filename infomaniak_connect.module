@@ -1,0 +1,130 @@
+<?php
+
+/**
+ * @file
+ * Primary module hooks for Infomaniak OpenId Connect module.
+ */
+
+/* @noinspection PhpUnnecessaryFullyQualifiedNameInspection */
+/* @noinspection PhpUnusedParameterInspection */
+/* @noinspection PhpUnused */
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+use Drupal\infomaniak_connect\Plugin\OpenIDConnectClient\OpenIDConnectInfomaniakClient;
+use Drupal\openid_connect\Entity\OpenIDConnectClientEntity;
+use Drupal\user\UserInterface;
+
+/**
+ * Implements hook_help().
+ *
+ * @SuppressWarnings(PHPMD.UnusedFormalParameters)
+ */
+function infomaniak_connect_help($route_name, RouteMatchInterface $route_match): string {
+  $output = '';
+  switch ($route_name) {
+    // Main module help for the keycloak module.
+    case 'help.page.infomaniak_connect':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Infomaniak Connect module allows you to authenticate your users against a Infomaniak authentication server. You can enable the Infomaniak connect client within the <a href=":settings">OpenID Connect settings</a> page. For more information, see the <a href=":documentation">online documentation for the Infomaniak Connect module</a>.',
+          [
+            ':settings' => Url::fromRoute('entity.openid_connect_client.list')
+              ->toString(),
+            ':documentation' => 'https://www.drupal.org/project/infomaniak_connect',
+          ]) . '</p>';
+      return $output;
+  }
+  return $output;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for openid_connect_login_form.
+ *
+ * @SuppressWarnings(PHPMD.UnusedFormalParameters)
+ * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+ */
+function infomaniak_connect_form_openid_connect_login_form_alter(&$form, FormStateInterface $form_state, $form_id): void {
+  /** @var \Drupal\openid_connect\OpenIDConnectClientEntityInterface[] $clients */
+  $clients = \Drupal::entityTypeManager()->getStorage('openid_connect_client')
+    ->loadByProperties([
+      'status' => TRUE,
+      'plugin' => 'infomaniak',
+    ]);
+
+  foreach ($clients as $client_id => $client) {
+    if (!isset($form['openid_connect_client_' . $client_id . '_login'])) {
+      continue;
+    }
+    $form['openid_connect_client_' . $client_id . '_login']['#attached']['library'][] = 'infomaniak_connect/base';
+    $form['openid_connect_client_' . $client_id . '_login']['#attributes']['class'][] = 'button--infomaniak';
+  }
+}
+
+/**
+ * Implements hook_openid_connect_pre_authorize().
+ *
+ * @SuppressWarnings(PHPMD.UnusedFormalParameters)
+ */
+function infomaniak_connect_openid_connect_pre_authorize($account, array $context): bool {
+  if (empty($context)) {
+    return FALSE;
+  }
+
+  // Validate the email address.
+  $email_validator = \Drupal::service('email.validator');
+  $email = $context['userinfo']['email'] ?? '';
+  if (!$email_validator->isValid($email)) {
+    \Drupal::messenger()->addError(t('The email address is not valid: @email', [
+      '@email' => $email,
+    ]));
+    return FALSE;
+  }
+
+  // Check if the email is authorized by the plugin.
+  $access = infomaniak_connect_get_plugin($context)?->isLoginAuthorized($email) ?? FALSE;
+
+  // Display error message.
+  if (!$access) {
+    \Drupal::messenger()
+      ->addError(t('The email address is not authorized: @email', [
+        '@email' => $email,
+      ]));
+    return FALSE;
+  }
+
+  return TRUE;
+}
+
+/**
+ * Implements hook_openid_connect_userinfo_save().
+ */
+function infomaniak_connect_openid_connect_userinfo_save(UserInterface $account, array $context): void {
+  if (empty($context['userinfo']['email'])) {
+    return;
+  }
+  $admin_role = 'administrator';
+  $is_admin = infomaniak_connect_get_plugin($context)?->isAdminEmail($context['userinfo']['email']);
+  $is_admin ? $account->addRole($admin_role) : $account->removeRole($admin_role);
+}
+
+/**
+ * Retrieves the Infomaniak OpenID Connect plugin from the context.
+ *
+ * @param array $context
+ *   The OpenID Connect context data.
+ *
+ * @return \Drupal\infomaniak_connect\Plugin\OpenIDConnectClient\OpenIDConnectInfomaniakClient|null
+ *   The plugin instance if found, or NULL otherwise.
+ */
+function infomaniak_connect_get_plugin(array $context): OpenIDConnectInfomaniakClient|null {
+  if (isset($context['plugin_id'])) {
+    $plugin = OpenIDConnectClientEntity::load($context['plugin_id'])
+      ?->getPlugin();
+    if ($plugin instanceof OpenIDConnectInfomaniakClient) {
+      return $plugin;
+    }
+  }
+  return NULL;
+}

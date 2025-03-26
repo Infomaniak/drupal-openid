@@ -1,0 +1,8 @@
+parameters:
+  level: 9
+
+  ignoreErrors:
+    # new static() is a best practice in Drupal, so we cannot fix that.
+    # @see https://www.drupal.org/docs/develop/development-tools/phpstan/handling-unsafe-usage-of-new-static
+    - "#^Unsafe usage of new static#"
+

@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * Install module hooks for Nova OIDC module.
+ */
+
+/* @noinspection PhpUnnecessaryFullyQualifiedNameInspection */
+/* @noinspection PhpUnusedParameterInspection */
+/* @noinspection PhpUnused */
+
+/**
+ * Implements hook_uninstall().
+ */
+function infomaniak_connect__uninstall(): void {
+  // Remove configuration.
+  Drupal::configFactory()
+    ->getEditable('openid_connect.client.infomaniak')
+    ->delete();
+}
