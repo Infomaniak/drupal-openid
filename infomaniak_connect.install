@@ -12,7 +12,7 @@
 /**
  * Implements hook_uninstall().
  */
-function infomaniak_connect__uninstall(): void {
+function infomaniak_connect_uninstall(): void {
   // Remove configuration.
   Drupal::configFactory()
     ->getEditable('openid_connect.client.infomaniak')
