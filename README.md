@@ -28,7 +28,9 @@ See: https://www.drupal.org/node/895232 for further information.
 * Enable the module.
 * Go to the openid_connect settings at `Administration / Configuration / People / OpenID Connect`
 * Infomaniak OAuth 2.0 will be available as a client and preconfigured.
-* Copy the `Redirect URL` and save it on your Infomaniak Auth Application > `Permitted redirection URLs` part.
+* Create an Auth application on the Infomaniak Manager https://manager.infomaniak.com/v3/ng/profile/user/applications/list to fetch the Client ID and Client secret. 
+* Specify the redirect URI provided at the end of the OpenID Connect client settings page
+* Change the "OpenID buttons display in user login form" settings to display the Login with Infomaniak button for your users
 
 ## MAINTAINERS
 
